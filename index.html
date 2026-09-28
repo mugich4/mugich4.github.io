@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LoLルーン入門｜系統・キーストーン・列で見る</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F4EE;--panel:#ECE8DC;--ink:#1E2430;--muted:#5F6672;--line:#D6D0BE;
+  --prec:#B8901F;--dom:#B23A3A;--sorc:#3B63B8;--res:#3F8A5A;--insp:#2A8A94;
+  --serif:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161A21;--panel:#1F252E;--ink:#E8EAEE;--muted:#9AA3AF;--line:#2E3642;--prec:#DDB84A;--dom:#E07A7A;--sorc:#7FA0E6;--res:#6CC28A;--insp:#5CC3CD}}
+:root[data-theme="dark"]{--bg:#161A21;--panel:#1F252E;--ink:#E8EAEE;--muted:#9AA3AF;--line:#2E3642;--prec:#DDB84A;--dom:#E07A7A;--sorc:#7FA0E6;--res:#6CC28A;--insp:#5CC3CD}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.85;font-size:16px}
+main{max-width:760px;margin:0 auto;padding:64px 20px 40px}
+h1{font-family:var(--serif);font-weight:800;font-size:clamp(34px,9vw,54px);line-height:1.3;margin:0 0 16px}
+.lead{color:var(--muted);margin:0 0 32px}
+.how{background:var(--panel);padding:16px 20px;border-radius:4px;margin:0 0 32px;font-size:.95rem}
+.how p{margin:0 0 .4em}.how p:last-child{margin:0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px}
+.tabs button{font:inherit;font-weight:500;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-bottom:5px solid var(--c);padding:8px 18px;cursor:pointer;border-radius:4px}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff;border-color:var(--c)}
+.tabs button:focus-visible,.card:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+h2{font-family:var(--serif);font-size:1.5rem;margin:0 0 4px}
+.sum{color:var(--muted);margin:0 0 24px}
+h3{font-size:1.05rem;font-weight:500;margin:28px 0 2px}
+.gn{color:var(--muted);font-size:.9rem;margin:0 0 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.card{background:var(--panel);border-left:5px solid var(--c);padding:10px 14px}
+.card{display:flex;gap:12px;align-items:center}
+.card img{width:48px;height:48px;flex:none;border-radius:50%;background:rgba(128,128,128,.25)}
+.ks .card img{width:60px;height:60px}
+.card b{display:block;font-weight:500}
+.card span{color:var(--muted);font-size:.9rem;line-height:1.6;display:block}
+.ks .card{border-left-width:8px;padding:14px 16px}
+.ks .card b{font-family:var(--serif);font-size:1.1rem}
+#bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;background:radial-gradient(circle at 85% 6%,color-mix(in srgb,var(--c) 24%,transparent),transparent 55%)}
+#bg .big{position:absolute;right:-2vw;top:3vh;font-family:var(--serif);font-weight:800;font-style:normal;font-size:clamp(150px,36vw,400px);line-height:1;color:var(--c);opacity:.09}
+#bg p{position:absolute;left:-10vw;width:140vw;margin:0;white-space:nowrap;font-family:var(--serif);font-weight:600;font-size:clamp(20px,4vw,34px);color:var(--c);opacity:.1;transform:rotate(-8deg)}
+main,footer{position:relative;z-index:1}
+footer{max-width:760px;margin:0 auto;padding:16px 20px 32px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<main>
+  <h1>LoLルーン入門</h1>
+  <p class="lead">ルーンは試合前に選ぶ強化設定です。5つの系統を選び、その中を「キーストーン」と「1〜3列目」に分けて見ていきます。</p>
+  <div class="how">
+    <p><b>ルーンページの作り方</b></p>
+    <p>メイン系統から、キーストーン1つと、1〜3列目のルーンを1つずつ選びます。サブ系統からは別々の列を2つ選びます。最後にステータス強化を3つ選びます。</p>
+  </div>
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div id="view"></div>
+</main>
+<footer>
+<p>LoLルーン入門 was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.</p>
+<p>非公式のファンサイトです。内容はパッチ26.17時点の情報を元にしています。最新の効果はゲーム内でご確認ください。</p>
+</footer>
+<script>
+var D=[
+{n:"栄華",c:"prec",t:"通常攻撃を軸に、殴り合いを有利にする系統です。",g:[
+["キーストーン",[["プレスアタック","3回続けて殴ると追加ダメージ。短い接近戦向き。"],["リーサルテンポ","当てるほど攻撃速度が上がる。長い撃ち合い向き。"],["フリートフットワーク","回復と移動速度で粘る。苦しいレーン向き。"],["征服者","殴り続けて強くなり、回復もする。長い戦い向き。"]]],
+["1列目",[["体力吸収","キルで体力が回復する。"],["凱旋","キルやアシストで回復とゴールド。"],["冷静沈着","攻撃するとマナが戻る。"]]],
+["2列目",[["レジェンド: 迅速","キルで攻撃速度が永続的に上がる。"],["レジェンド: ヘイスト","キルでスキルの回転が永続的に良くなる。"],["レジェンド: 血脈","キルでライフスティールが増える。"]]],
+["3列目",[["最期の慈悲","体力の低い相手に強くなる。"],["切り崩し","体力の多い相手に強くなる。"],["背水の陣","自分の体力が低いほど強くなる。"]]]]},
+{n:"覇道",c:"dom",t:"一気に倒すことと、視界の確保が得意な系統です。",g:[
+["キーストーン",[["電撃","3回当てると追加ダメージ。短期決戦向き。"],["魂の収穫","体力の低い相手を倒して育つ。"],["ヘイルブレード","接近直後の3回の攻撃が速くなる。"]]],
+["1列目",[["追い打ち","動きを止めた相手に追加ダメージ。"],["血の味わい","ダメージを与えると回復する。"],["サドンインパクト","飛び込んだ直後に追加ダメージ。"]]],
+["2列目",[["第六感","近くのワードを自動で見つける。"],["グリスリー メメント","キルでトリンケットの回転が早くなる。"],["ディープワード","敵ジャングルのワードが長持ちする。"]]],
+["3列目",[["貪欲な賞金首狩り","初めて倒す相手ごとに追加ゴールド。"],["執拗な賞金首狩り","別の相手を倒すごとに移動が速くなる。"],["至極の賞金首狩り","別の相手を倒すごとにアルティメットが早く戻る。"]]]]},
+{n:"魔道",c:"sorc",t:"スキルの火力と、動きの速さを伸ばす系統です。",g:[
+["キーストーン",[["エアリー召喚","味方にシールド、敵にダメージ。"],["秘儀の彗星","スキルを当てると彗星が追撃する。"],["嵐乗りの勇躍","大ダメージを与えると移動が速くなる。"],["死神の残り火","スキルで継続の燃焼ダメージ。"]]],
+["1列目",[["アクシオム アルカニスト","アルティメットが強くなり、早く戻る。"],["マナフローバンド","スキルを当てて最大マナが増える。"],["ニンバスクローク","サモナースペルの後に速くなる。"]]],
+["2列目",[["至高","レベルでスキルの回転が良くなる。"],["追い風","移動速度のボーナスが少し伸びる。"],["英気集中","体力が多いほど追加ダメージ。"]]],
+["3列目",[["追火","スキルで相手を燃やす。"],["水走り","川の中で速く、少し強くなる。"],["強まる嵐","時間とともに攻撃力や魔力が伸びる。"]]]]},
+{n:"不滅",c:"res",t:"打たれ強くなり、前線で粘る系統です。",g:[
+["キーストーン",[["不死者の握撃","通常攻撃で回復し、最大体力が増える。"],["アフターショック","動きを止めると硬くなり、爆発する。"],["ガーディアン","味方を守り、シールドを出す。"]]],
+["1列目",[["打ちこわし","タワーへの攻撃が強くなる。"],["生命の泉","動きを止めると味方が回復する。"],["シールドバッシュ","シールドを得ると攻撃が強くなる。"]]],
+["2列目",[["心身調整","12分後に防御が上がる。"],["息継ぎ","受けたダメージを少しずつ回復する。"],["ボーンアーマー","直後の数回のダメージを軽減する。"]]],
+["3列目",[["超成長","近くで敵が倒れると最大体力が増える。"],["生気付与","回復とシールドが強くなる。"],["気迫","動きを止められると防御が上がる。"]]]]},
+{n:"天啓",c:"insp",t:"変わった便利な効果が多い系統です。",g:[
+["キーストーン",[["グレイシャルオーグメント","動きを止めると周囲の敵をスロウ。"],["解放の魔導書","サモナースペルを入れ替えられる。"],["ファーストストライク","先手で追加ダメージとゴールド。"]]],
+["1列目",[["ヘクステックフラッシュネイター","フラッシュの代わりに別の瞬間移動。"],["魔法の靴","12分で無料のブーツが手に入る。"],["キャッシュバック","高いアイテムを買うと一部が戻る。"]]],
+["2列目",[["トリプル トニック","レベルごとにエリクサーを獲得。"],["タイムワープトニック","ポーションの回復が即座に入る。"],["ビスケットデリバリー","ビスケットで体力を回復する。"]]],
+["3列目",[["宇宙の英知","サモナースペルとアイテムの回転が良くなる。"],["疾駆","動きを止めた敵に追いつきやすい。"],["なんでも屋","積むステータスの種類でスキルの回転が良くなる。"]]]]}
+];
+var BASE="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/";
+var I={"プレスアタック":"Precision/PressTheAttack/PressTheAttack.png","リーサルテンポ":"Precision/LethalTempo/LethalTempoTemp.png","フリートフットワーク":"Precision/FleetFootwork/FleetFootwork.png","征服者":"Precision/Conqueror/Conqueror.png","体力吸収":"Precision/AbsorbLife/AbsorbLife.png","凱旋":"Precision/Triumph.png","冷静沈着":"Precision/PresenceOfMind/PresenceOfMind.png","レジェンド: 迅速":"Precision/LegendAlacrity/LegendAlacrity.png","レジェンド: ヘイスト":"Precision/LegendHaste/LegendHaste.png","レジェンド: 血脈":"Precision/LegendBloodline/LegendBloodline.png","最期の慈悲":"Precision/CoupDeGrace/CoupDeGrace.png","切り崩し":"Precision/CutDown/CutDown.png","背水の陣":"Precision/LastStand/LastStand.png|Sorcery/LastStand/LastStand.png",
+"電撃":"Domination/Electrocute/Electrocute.png","魂の収穫":"Domination/DarkHarvest/DarkHarvest.png","ヘイルブレード":"Domination/HailOfBlades/HailOfBlades.png","追い打ち":"Domination/CheapShot/CheapShot.png","血の味わい":"Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png","サドンインパクト":"Domination/SuddenImpact/SuddenImpact.png","第六感":"Domination/SixthSense/SixthSense.png","グリスリー メメント":"Domination/GrislyMementos/GrislyMementos.png","ディープワード":"Domination/DeepWard/DeepWard.png","貪欲な賞金首狩り":"Domination/TreasureHunter/TreasureHunter.png","執拗な賞金首狩り":"Domination/RelentlessHunter/RelentlessHunter.png","至極の賞金首狩り":"Domination/UltimateHunter/UltimateHunter.png",
+"エアリー召喚":"Sorcery/SummonAery/SummonAery.png","秘儀の彗星":"Sorcery/ArcaneComet/ArcaneComet.png","嵐乗りの勇躍":"Sorcery/PhaseRush/StormraidersSurgeRuneIcon2.png","死神の残り火":"Sorcery/DeathfireTouch/DEATHFIRE_TOUCH_KEYSTONE.png","アクシオム アルカニスト":"Sorcery/NullifyingOrb/Axiom_Arcanist.png","マナフローバンド":"Sorcery/ManaflowBand/ManaflowBand.png","ニンバスクローク":"Sorcery/NimbusCloak/6361.png","至高":"Sorcery/Transcendence/Transcendence.png","追い風":"Sorcery/Celerity/CelerityTemp.png","英気集中":"Sorcery/AbsoluteFocus/AbsoluteFocus.png","追火":"Sorcery/Scorch/Scorch.png","水走り":"Sorcery/Waterwalking/Waterwalking.png","強まる嵐":"Sorcery/GatheringStorm/GatheringStorm.png",
+"不死者の握撃":"Resolve/GraspOfTheUndying/GraspOfTheUndying.png","アフターショック":"Resolve/VeteranAftershock/VeteranAftershock.png","ガーディアン":"Resolve/Guardian/Guardian.png","打ちこわし":"Resolve/Demolish/Demolish.png","生命の泉":"Resolve/FontOfLife/FontOfLife.png","シールドバッシュ":"Resolve/MirrorShell/MirrorShell.png","心身調整":"Resolve/Conditioning/Conditioning.png","息継ぎ":"Resolve/SecondWind/SecondWind.png","ボーンアーマー":"Resolve/BonePlating/BonePlating.png","超成長":"Resolve/Overgrowth/Overgrowth.png","生気付与":"Resolve/Revitalize/Revitalize.png","気迫":"Resolve/Unflinching/Unflinching.png|Sorcery/Unflinching/Unflinching.png",
+"グレイシャルオーグメント":"Inspiration/GlacialAugment/GlacialAugment.png","解放の魔導書":"Inspiration/UnsealedSpellbook/UnsealedSpellbook.png","ファーストストライク":"Inspiration/FirstStrike/FirstStrike.png","ヘクステックフラッシュネイター":"Inspiration/HextechFlashtraption/HextechFlashtraption.png","魔法の靴":"Inspiration/MagicalFootwear/MagicalFootwear.png","キャッシュバック":"Inspiration/CashBack/CashBack2.png","トリプル トニック":"Inspiration/PerfectTiming/AlchemistCabinet.png","タイムワープトニック":"Inspiration/TimeWarpTonic/TimeWarpTonic.png","ビスケットデリバリー":"Inspiration/BiscuitDelivery/BiscuitDelivery.png","宇宙の英知":"Inspiration/CosmicInsight/CosmicInsight.png","疾駆":"Resolve/ApproachVelocity/ApproachVelocity.png","なんでも屋":"Inspiration/JackOfAllTrades/JackofAllTrades2.png"};
+var notes={"キーストーン":"メイン系統から1つだけ選びます。サブ系統では選べません。"};
+var tabs=document.getElementById("tabs"),view=document.getElementById("view");
+function show(i){
+  var d=D[i];
+  [].forEach.call(tabs.children,function(b,k){b.setAttribute("aria-selected",k===i)});
+  var h='<h2>'+d.n+'</h2><p class="sum">'+d.t+'</p>';
+  d.g.forEach(function(g){
+    var ks=g[0]==="キーストーン";
+    h+='<h3>'+g[0]+'</h3><p class="gn">'+(ks?notes[g[0]]:"メイン系統なら1つ、サブ系統なら別の列と合わせて2つ選びます。")+'</p><div class="grid'+(ks?' ks':'')+'" style="--c:var(--'+d.c+')">';
+    g[1].forEach(function(r){h+='<div class="card"><img data-p="'+(I[r[0]]||"")+'" alt="" width="48" height="48"><div><b>'+r[0]+'</b><span>'+r[1]+'</span></div></div>'});
+    h+='</div>';
+  });
+  var bg=document.getElementById("bg"),ks=d.g[0][1].map(function(r){return r[0]}).join("　　"),bh='<i class="big">'+d.n+'</i>';
+  for(var k=0;k<8;k++){bh+='<p style="top:'+(k*13-4)+'%">'+ks+'　　'+ks+'</p>'}
+  bg.style.setProperty("--c","var(--"+d.c+")");bg.innerHTML=bh;
+  view.innerHTML=h;
+  [].forEach.call(view.querySelectorAll("img[data-p]"),function(m){var ps=m.getAttribute("data-p").split("|"),n=0;if(!ps[0]){m.style.display="none";return}
+    m.onerror=function(){n++;if(n<ps.length){m.src=BASE+ps[n]}else{m.style.display="none"}};m.src=BASE+ps[0];});
+  try{history.replaceState(null,"","#"+d.c)}catch(e){}
+}
+D.forEach(function(d,i){
+  var b=document.createElement("button");
+  b.textContent=d.n;b.setAttribute("role","tab");b.style.setProperty("--c","var(--"+d.c+")");
+  b.onclick=function(){show(i)};tabs.appendChild(b);
+});
+var s=0;D.forEach(function(d,i){if(location.hash==="#"+d.c)s=i});
+show(s);
+</script>
+</body>
+</html>
